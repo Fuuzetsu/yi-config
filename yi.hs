@@ -12,7 +12,7 @@ import qualified Yi.Mode.Haskell as Haskell
 
 myModeTable :: [AnyMode]
 myModeTable =
-  [ AnyMode $ haskellModeHooks Haskell.preciseMode
+  [ AnyMode $ haskellModeHooks Haskell.cleverMode
   ] ++ modeTable defaultEmacsConfig
 
 haskellModeHooks :: Mode syntax -> Mode syntax
