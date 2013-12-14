@@ -12,16 +12,18 @@ import qualified Yi.Mode.Haskell as Haskell
 
 myModeTable :: [AnyMode]
 myModeTable =
-  [ AnyMode Haskell.preciseMode
+  [ AnyMode $ haskellModeHooks Haskell.preciseMode
   ] ++ modeTable defaultEmacsConfig
 
+haskellModeHooks :: Mode syntax -> Mode syntax
+haskellModeHooks mode =
+  mode { modeKeymap =
+            topKeymapA ^: ((ctrlCh 'c' ?>> ctrlCh 'l' ?>>! ghciLoadBuffer) <||)
+       }
+
+myConfig :: Config
 myConfig = defaultEmacsConfig
-  { defaultKm =
-       Emacs.mkKeymap $ override Emacs.defKeymap $ \parent _ ->
-         parent { Emacs.eKeymap =
-                     Emacs.eKeymap parent ||> (ctrlCh 'c' ?>> ctrlCh 'l'
-                                               ?>>! ghciLoadBuffer)
-                }
+  { defaultKm = Emacs.mkKeymap Emacs.defKeymap
   , modeTable = myModeTable
   }
 
