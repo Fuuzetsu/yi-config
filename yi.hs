@@ -1,6 +1,8 @@
+import           Control.Monad (liftM)
 import           Data.Bits
 import           Data.Char (isDigit)
 import           Data.List
+import           Data.Maybe (catMaybes)
 import           Text.Read (readMaybe)
 import           Yi hiding (foldl, (.), notElem, mapM, mapM_)
 import           Yi.IReader (getBufferContents)
@@ -55,8 +57,7 @@ ghciInsertMissingTypes = do
           bufferFuncs = extractFunctions $ lines bufContent
           bufFuncNames = map fst bufferFuncs
           missingFuncSigs = filter (\x -> fst x `notElem` bufFuncNames) funcs
-          justs xs = [ x | Just x <- xs ]
-      insertLocs <- justs <$> mapM (flip getFuncDefLoc buf) missingFuncSigs
+      insertLocs <- catMaybes <$> mapM (`getFuncDefLoc` buf) missingFuncSigs
       let sortedLocs = sortBy (on compare snd) insertLocs
           -- As we're going to be inserting, we need to increase subsequent insert
           -- locations by one
@@ -91,7 +92,7 @@ extractFunctions = filtFuncs fs . joinSplits
   where
     filtFuncs f xs = [ (x, unwords ys) | Just ([x], _:ys) <- map f xs ]
     fs x = let w = words x
-           in findIndex (== "::") w >>= return . flip splitAt w
+           in flip splitAt w `liftM` elemIndex "::" w
 
 -- | Joins up lines split up by GHCi to fit nicely in the output window. e.g.
 --
