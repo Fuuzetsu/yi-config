@@ -1,10 +1,5 @@
 import           Data.Bits
-import           Data.Monoid
-import           Data.Word
 import           Yi
-import           Yi.Prelude
-import           Yi.Style
-import           Yi.Style.Library
 import           Yi.Style.Monokai
 import           Yi.UI.Pango (start)
 import qualified Yi.Keymap.Emacs as Emacs
@@ -18,8 +13,12 @@ myModeTable =
 haskellModeHooks :: Mode syntax -> Mode syntax
 haskellModeHooks mode =
   mode { modeKeymap =
-            topKeymapA ^: ((ctrlCh 'c' ?>> ctrlCh 'l' ?>>! ghciLoadBuffer) <||)
+            topKeymapA ^: ((ctrlCh 'c' ?>> choice cMaps) <||)
        }
+  where
+    cMaps = [ ctrlCh 'l' ?>>! ghciLoadBuffer
+            , ctrlCh 'h' ?>> ctrlCh 't' ?>>! Haskell.ghciInferType
+            ]
 
 myConfig :: Config
 myConfig = defaultEmacsConfig
