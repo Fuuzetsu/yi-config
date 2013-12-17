@@ -4,7 +4,8 @@ import           Yi.Style.Monokai
 import           Yi.UI.Pango (start)
 import qualified Yi.Keymap.Emacs as Emacs
 import qualified Yi.Mode.Haskell as Haskell
-import           Yi.Mode.Haskell.Utils (ghciInsertMissingTypes)
+import           Yi.Mode.Haskell.Utils (ghciInsertMissingTypes,
+                                        getTypeAtPoint, caseSplitAtPoint)
 
 myModeTable :: [AnyMode]
 myModeTable =
@@ -20,6 +21,8 @@ haskellModeHooks mode =
     cMaps = [ ctrlCh 'l' ?>>! ghciLoadBuffer
             , ctrlCh 'h' ?>> ctrlCh 't' ?>>! Haskell.ghciInferType
             , ctrlCh 'h' ?>> ctrlCh 'm' ?>>! ghciInsertMissingTypes
+            , ctrlCh 'h' ?>> ctrlCh 'c' ?>>! getTypeAtPoint
+            , ctrlCh 'h' ?>> ctrlCh 's' ?>>! caseSplitAtPoint
             ]
 
 myConfig :: Config
