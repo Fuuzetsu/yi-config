@@ -1,5 +1,6 @@
 import           Data.Bits
 import           Yi hiding (foldl, (.), notElem, mapM, mapM_)
+import           Yi.FuzzyOpen
 import           Yi.Style.Monokai
 import           Yi.UI.Pango (start)
 import qualified Yi.Keymap.Emacs as Emacs
@@ -7,10 +8,19 @@ import qualified Yi.Mode.Haskell as Haskell
 import           Yi.Mode.Haskell.Utils (ghciInsertMissingTypes,
                                         getTypeAtPoint, caseSplitAtPoint)
 
+
 myModeTable :: [AnyMode]
 myModeTable =
   [ AnyMode $ haskellModeHooks Haskell.cleverMode
   ] ++ modeTable defaultEmacsConfig
+
+
+myKeymap :: KeymapSet
+myKeymap = Emacs.mkKeymap $ override Emacs.defKeymap $ \proto _self ->
+   proto {
+           Emacs.eKeymap = Emacs.eKeymap proto
+                           <|> (ctrlCh 'c' ?>> ctrlCh 'f' ?>>! fuzzyOpen)
+         }
 
 haskellModeHooks :: Mode syntax -> Mode syntax
 haskellModeHooks mode =
@@ -27,7 +37,7 @@ haskellModeHooks mode =
 
 myConfig :: Config
 myConfig = defaultEmacsConfig
-  { defaultKm = Emacs.mkKeymap Emacs.defKeymap
+  { defaultKm = myKeymap
   , modeTable = myModeTable
   }
 
