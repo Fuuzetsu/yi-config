@@ -1,5 +1,7 @@
+import           Control.Applicative ((<|>))
+import           Control.Lens ((%~))
 import           Data.Bits
-import           Yi hiding (foldl, (.), notElem, mapM, mapM_)
+import           Yi
 import           Yi.FuzzyOpen
 import           Yi.Style.Monokai
 import           Yi.UI.Pango (start)
@@ -25,7 +27,7 @@ myKeymap = Emacs.mkKeymap $ override Emacs.defKeymap $ \proto _self ->
 haskellModeHooks :: Mode syntax -> Mode syntax
 haskellModeHooks mode =
   mode { modeKeymap =
-            topKeymapA ^: ((ctrlCh 'c' ?>> choice cMaps) <||)
+            topKeymapA %~ ((ctrlCh 'c' ?>> choice cMaps) <||)
        }
   where
     cMaps = [ ctrlCh 'l' ?>>! ghciLoadBuffer
