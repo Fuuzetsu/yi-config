@@ -11,10 +11,9 @@ import qualified Yi.Mode.Haskell as Haskell
 import           Yi.Mode.Haskell.Utils (ghciInsertMissingTypes,
                                         getTypeAtPoint, caseSplitAtPoint)
 
-
 myModeTable :: [AnyMode]
 myModeTable =
-  [ AnyMode $ haskellModeHooks Haskell.cleverMode
+  [ AnyMode $ haskellModeHooks Haskell.preciseMode
   ] ++ modeTable defaultEmacsConfig
 
 
