@@ -3,6 +3,7 @@ import           Control.Lens ((%~))
 import           Data.Bits
 import           Yi
 import           Yi.FuzzyOpen
+import           Yi.Hoogle
 import           Yi.Style.Monokai
 import           Yi.UI.Pango (start)
 import qualified Yi.Keymap.Emacs as Emacs
@@ -35,6 +36,7 @@ haskellModeHooks mode =
             , ctrlCh 'h' ?>> ctrlCh 'm' ?>>! ghciInsertMissingTypes
             , ctrlCh 'h' ?>> ctrlCh 'c' ?>>! getTypeAtPoint
             , ctrlCh 'h' ?>> ctrlCh 's' ?>>! caseSplitAtPoint
+            , ctrlCh 'h' ?>> ctrlCh 'h' ?>>! hoogleSearch
             ]
 
 myConfig :: Config
