@@ -10,6 +10,8 @@ import qualified Yi.Keymap.Emacs as Emacs
 import qualified Yi.Mode.Haskell as Haskell
 import           Yi.Mode.Haskell.Utils (ghciInsertMissingTypes,
                                         getTypeAtPoint, caseSplitAtPoint)
+import           Yi.Mode.Haskell.Utils.PastePipe (lpasteCustom)
+import           Yi.Monad (gets)
 
 myModeTable :: [AnyMode]
 myModeTable =
@@ -36,6 +38,8 @@ haskellModeHooks mode =
             , ctrlCh 'h' ?>> ctrlCh 'c' ?>>! getTypeAtPoint
             , ctrlCh 'h' ?>> ctrlCh 's' ?>>! caseSplitAtPoint
             , ctrlCh 'h' ?>> ctrlCh 'h' ?>>! hoogleSearch
+            , ctrlCh 'h' ?>> ctrlCh 'p' ?>>! withBuffer (gets file) >>= \t ->
+                lpasteCustom "Fūzetsu" t "haskell"
             ]
 
 myConfig :: Config
