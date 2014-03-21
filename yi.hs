@@ -1,7 +1,7 @@
 {-# LANGUAGE UnicodeSyntax #-}
 
 import           Control.Applicative ((<|>), (*>), Applicative)
-import           Control.Lens ((%~))
+import           Control.Lens ((%~), (&))
 import           Control.Monad
 import           Data.Bits
 import           Yi
@@ -32,13 +32,13 @@ myModeTable =
 
 
 myKeymap ∷ KeymapSet
-myKeymap = Emacs.mkKeymap $ override Emacs.defKeymap $ \proto _self ->
-   proto {
-           Emacs.eKeymap =
-              Emacs.eKeymap proto
-              ||> (ctrlCh 'x' ?>> ctrlCh 's' ?>>! saveAndTruncate)
-              <|> (ctrlCh 'c' ?>> ctrlCh 'f' ?>>! fuzzyOpen)
-         }
+myKeymap = Emacs.mkKeymap $ override Emacs.defKeymap $ \proto ->
+   proto & Emacs.eKeymap %~
+   (||> choice
+      [ ctrlCh 'x' ?>> ctrlCh 's' ?>>! saveAndTruncate
+      , ctrlCh 'c' ?>> ctrlCh 'f' ?>>! fuzzyOpen
+      ])
+
 
 saveAndTruncate ∷ YiM ()
 saveAndTruncate = before fwriteE $ withBuffer deleteTrailingSpaceB
