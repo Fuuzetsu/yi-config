@@ -37,6 +37,8 @@ myKeymap = Emacs.mkKeymap $ override Emacs.defKeymap $ \proto _ ->
    (||> choice
       [ ctrlCh 'x' ?>> ctrlCh 's' ?>>! saveAndTruncate
       , ctrlCh 'c' ?>> ctrlCh 'f' ?>>! fuzzyOpen
+      , metaCh 'p' ?>>! prevNParagraphs 1
+      , metaCh 'n' ?>>! nextNParagraphs 1
       ])
 
 
