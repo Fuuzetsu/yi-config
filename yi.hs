@@ -32,7 +32,7 @@ myModeTable =
 
 
 myKeymap ∷ KeymapSet
-myKeymap = Emacs.mkKeymap $ override Emacs.defKeymap $ \proto ->
+myKeymap = Emacs.mkKeymap $ override Emacs.defKeymap $ \proto _ ->
    proto & Emacs.eKeymap %~
    (||> choice
       [ ctrlCh 'x' ?>> ctrlCh 's' ?>>! saveAndTruncate
