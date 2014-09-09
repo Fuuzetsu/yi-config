@@ -1,5 +1,7 @@
 {-# LANGUAGE UnicodeSyntax #-}
 
+module Main where
+
 import           Control.Applicative ((<|>), (*>), Applicative)
 import           Control.Lens ((%~), (&))
 import           Control.Monad
@@ -40,7 +42,6 @@ myKeymap = Emacs.mkKeymap $ override Emacs.defKeymap $ \proto _ ->
       , metaCh 'p' ?>>! prevNParagraphs 1
       , metaCh 'n' ?>>! nextNParagraphs 1
       ])
-
 
 saveAndTruncate ∷ YiM ()
 saveAndTruncate = before fwriteE $ withBuffer deleteTrailingSpaceB

@@ -1,0 +1,33 @@
+name:           yi-custom
+version:        0.0.0.1
+category:       Development, Editor
+synopsis:       Personal Yi config.
+description:    Personal Yi config.
+license:        GPL
+license-file:   LICENSE
+author:         Mateusz Kowalczyk
+maintainer:     fuuzetsu@fuuzetsu.co.uk
+homepage:       http://haskell.org/haskellwiki/Yi
+bug-reports:    https://github.com/yi-editor/yi/issues
+Cabal-Version:  >= 1.10
+build-type:     Simple
+
+flag profiling
+  Default: False
+  Description:
+    Runtime binary will be compiled with profiling and RTS
+    options enabled.
+
+executable yi-custom
+  hs-source-dirs: .
+  default-language: Haskell2010
+
+  if flag(profiling)
+    cpp-options: -DPROFILING
+
+  main-is: yi.hs
+
+  build-depends:
+    base >=4 && <5, yi, yi-monokai, yi-contrib, lens, yi-haskell-utils
+  ghc-options: -threaded
+  ghc-prof-options: -prof -auto-all -rtsopts
